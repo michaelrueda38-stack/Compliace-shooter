@@ -1,0 +1,1 @@
+{"name":"compliance-shooter","version":"2.0.0","description":"Juego educativo de compliance con ranking en línea","scripts":{"start":"node server.js"},"engines":{"node":">=18"},"license":"UNLICENSED","private":true}
