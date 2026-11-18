@@ -16,17 +16,20 @@ canvas{position:fixed;inset:0;width:100%;height:100%;display:block;touch-action:
 .btns{display:flex;gap:6px;pointer-events:auto}
 .btns button{font:inherit;font-size:13px;color:var(--ink);background:#0d1330cc;border:1px solid var(--line);border-radius:999px;padding:6px 12px;cursor:pointer}
 .btns button.off{opacity:.45;text-decoration:line-through}
-.screen{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:center;text-align:center;padding:calc(env(safe-area-inset-top,0px) + 20px) 20px calc(env(safe-area-inset-bottom,0px) + 20px);background:radial-gradient(ellipse at 50% 30%,#141c4acc,#070914f2 70%);overflow:auto;z-index:3;touch-action:pan-y}
+.screen{position:fixed;inset:0;display:none;flex-direction:column;align-items:center;justify-content:flex-start;text-align:center;padding:calc(env(safe-area-inset-top,0px) + 20px) 20px calc(env(safe-area-inset-bottom,0px) + 20px);background:radial-gradient(ellipse at 50% 30%,#141c4acc,#070914f2 70%);overflow:auto;z-index:3;touch-action:pan-y}
 .screen.on{display:flex}
+.screen>:first-child{margin-top:auto}.screen>:last-child{margin-bottom:auto}
 h1{margin:10px 0 0;font-size:clamp(34px,8vw,68px);font-weight:700;letter-spacing:.06em;line-height:1}
 h1 span{display:block;font-size:.42em;letter-spacing:.5em;color:var(--ice);margin-top:8px;padding-left:.5em}
 h2{margin:0 0 8px;font-size:clamp(26px,5vw,40px)}
 p{color:var(--dim);max-width:560px;line-height:1.5;margin:10px 0}
 .btn{font:inherit;font-weight:700;letter-spacing:.06em;color:#06101f;background:var(--ice);border:0;padding:14px 38px;border-radius:999px;cursor:pointer;font-size:1.1rem;margin:8px 5px;box-shadow:0 0 28px #7cc8ff55}
 .btn.ghost{background:transparent;color:var(--ink);border:1px solid var(--line);box-shadow:none}
-#how{display:none;text-align:left;max-width:520px;color:var(--ink);font-size:15px;line-height:1.55;background:#0d1330cc;border:1px solid var(--line);border-radius:16px;padding:14px 20px;margin:8px 0}
+#how{display:block;text-align:left;max-width:520px;color:var(--ink);font-size:15px;line-height:1.55;background:#0d1330cc;border:1px solid var(--line);border-radius:16px;padding:14px 20px;margin:8px 0}
 #how.on{display:block}
-#how li{margin:4px 0}
+#how li{margin:5px 0}
+#how b{color:var(--amb)}
+#how{list-style-position:inside}
 .grid{display:grid;grid-template-columns:repeat(2,minmax(120px,1fr));gap:10px;margin:14px 0;width:min(460px,100%)}
 .grid div{background:#0d1330cc;border:1px solid var(--line);border-radius:14px;padding:10px}
 .grid b{display:block;font-size:28px}
@@ -49,6 +52,16 @@ p{color:var(--dim);max-width:560px;line-height:1.5;margin:10px 0}
 #board{position:fixed;right:10px;top:calc(env(safe-area-inset-top,0px) + 58px);display:none;min-width:140px;max-width:46vw;background:#0d1330b3;border:1px solid var(--line);border-radius:12px;padding:6px 8px;pointer-events:none;z-index:2}
 #board .row{padding:3px 4px;font-size:12px;border:0}
 @media(max-width:600px){#board{top:calc(env(safe-area-inset-top,0px) + 96px)}}
+#sObs .list,#sObs .pod{width:min(720px,100%)}
+#sObs .row{font-size:18px}
+#sEdit .list{width:min(760px,100%)}
+.erow{display:flex;gap:6px;align-items:center;margin:5px 0}
+.erow input,#edTa{font:inherit;font-size:14px;color:var(--ink);background:#0d1330cc;border:1px solid var(--line);border-radius:10px;padding:8px 10px;user-select:text;-webkit-user-select:text}
+.erow input{flex:1;min-width:0}
+.erow input.long{border-color:var(--amb)}
+.erow select{font:inherit;font-size:13px;color:var(--ink);background:#0d1330;border:1px solid var(--line);border-radius:10px;padding:8px}
+.erow button{font:inherit;color:var(--ink);background:transparent;border:1px solid var(--line);border-radius:10px;padding:6px 10px;cursor:pointer}
+#edTa{width:100%;box-sizing:border-box;margin:8px 0}
 </style>
 </head>
 <body>
@@ -67,19 +80,20 @@ p{color:var(--dim);max-width:560px;line-height:1.5;margin:10px 0}
   <svg width="84" height="84" viewBox="0 0 84 84" aria-hidden="true"><path d="M42 6 74 22v24c0 16-13 27-32 32C23 73 10 62 10 46V22z" fill="none" stroke="#7cc8ff" stroke-width="3"/><circle cx="42" cy="42" r="14" fill="none" stroke="#ffb347" stroke-width="3"/><path d="M42 22v10M42 52v10M22 42h10M52 42h10" stroke="#ffb347" stroke-width="3" stroke-linecap="round"/></svg>
   <h1>COMPLIANCE<span>SHOOTER 2.0</span></h1>
   <p>Cada cápsula es una situación real de la empresa. Tu criterio decide qué se destruye.</p>
+  <ol id="how">
+    <li><b>Lee</b> cada cápsula que cae: describe una situación de la empresa.</li>
+    <li><b>Dispara solo a los riesgos</b> e incumplimientos: +100 puntos.</li>
+    <li><b>No dispares a las buenas prácticas:</b> −75 puntos y pierdes una vida.</li>
+    <li>Si un <b>riesgo</b> llega hasta tu nave, pierdes una vida.</li>
+    <li><b>Computador:</b> mueve el mouse y haz clic para disparar. <b>Celular:</b> desliza el dedo para mover y toca para disparar.</li>
+    <li>Tienes <b>3 vidas y 90 segundos</b>. Todas las cápsulas se ven iguales: decide por su contenido.</li>
+  </ol>
   <input id="nm" maxlength="20" placeholder="Tu nombre" autocomplete="off" aria-label="Tu nombre">
   <p id="err"></p>
-  <div><button class="btn" id="play">ENTRAR</button><button class="btn ghost" id="howb">Cómo jugar</button></div>
+  <div><button class="btn" id="play">ENTRAR</button></div>
+  <div><button class="btn ghost" id="obs" style="display:none">ENTRAR COMO OBSERVADOR (sin jugar)</button></div>
+  <div><button class="btn ghost" id="edit" style="display:none">EDITAR ENUNCIADOS</button></div>
   <p id="netmsg"></p>
-  <ul id="how">
-    <li>Mueve el mouse (o desliza el dedo) para desplazar la nave.</li>
-    <li>Clic izquierdo o toque de pantalla para disparar. También sirve la barra espaciadora.</li>
-    <li>Destruye los <b>riesgos e incumplimientos</b>: +100 puntos.</li>
-    <li>No dispares a las <b>buenas prácticas</b>: −75 puntos y pierdes una vida.</li>
-    <li>Si un riesgo llega hasta la nave, pierdes una vida.</li>
-    <li>Todas las cápsulas lucen igual: lee con atención. Tienes 3 vidas y 90 segundos.</li>
-    <li>En línea: escribe tu nombre y entra a la sala. El anfitrión inicia la ronda para todos a la vez, verás el ranking en vivo y al final el podio.</li>
-  </ul>
 </section>
 
 <section class="screen" id="sPause">
@@ -92,6 +106,32 @@ p{color:var(--dim);max-width:560px;line-height:1.5;margin:10px 0}
   <p id="lobMsg">Esperando a que el anfitrión inicie la ronda.</p>
   <div class="list" id="lobList"></div>
   <button class="btn" id="startRound" style="display:none">INICIAR RONDA</button>
+</section>
+
+<section class="screen" id="sObs">
+  <h2>Panel del anfitrión</h2>
+  <p id="obMsg"></p>
+  <div id="obRank" style="width:100%;display:flex;flex-direction:column;align-items:center"></div>
+  <div><button class="btn" id="startRound2">INICIAR RONDA</button><button class="btn ghost" id="closeRound2" style="display:none">CERRAR RONDA Y MOSTRAR PODIO</button></div>
+  <div><button class="btn ghost" id="edit2">EDITAR ENUNCIADOS</button></div>
+</section>
+
+<section class="screen" id="sEdit">
+  <h2>Enunciados del juego</h2>
+  <p id="edInfo"></p>
+  <div class="list" id="edList" style="max-height:46vh;overflow:auto"></div>
+  <p id="edMsg" style="min-height:1.3em;color:var(--amb);margin:4px 0"></p>
+  <div>
+    <button class="btn ghost" id="edAdd">+ Agregar</button>
+    <button class="btn ghost" id="edPaste">Pegar lista</button>
+    <button class="btn ghost" id="edDl">Descargar copia</button>
+    <button class="btn ghost" id="edReset">Restaurar originales</button>
+  </div>
+  <div id="edBox" style="display:none;width:min(560px,100%)">
+    <textarea id="edTa" rows="8" placeholder="Un enunciado por línea:&#10;texto | riesgo&#10;texto | buena"></textarea>
+    <button class="btn ghost" id="edAddList">Añadir a la lista</button>
+  </div>
+  <div><button class="btn" id="edSave">GUARDAR CAMBIOS</button><button class="btn ghost" id="edBack">Volver</button></div>
 </section>
 
 <section class="screen" id="sCount">
@@ -128,7 +168,7 @@ const CFG={
   ESCAPE_ANY:false             // false: solo pierde vida si escapa un riesgo; true: cualquier cápsula
 };
 /* ===== CONTENIDO: [enunciado, 1=riesgo / 0=buena práctica] ===== */
-const ITEMS=[
+let ITEMS=[
 ['Viaje pagado por un proveedor en licitación',1],
 ['Contratar a un familiar sin declararlo',1],
 ['Fraccionar una compra para evitar aprobación',1],
@@ -317,7 +357,7 @@ function loseLife(){lives--;sfx('life');shake=.3;flash=Math.max(flash,.25);if(li
 /* ===== PARTIDA ===== */
 function startGame(){
   initAudio();
-  myRound=session.round|0;pst='playing';score=0;lives=CFG.LIVES;timeLeft=CFG.TIME;hits=0;errors=0;escaped=0;targets=[];shots=[];parts=[];floats=[];mistakes=[];flash=0;shake=0;spawnT=.6;fireT=0;bag=[];lastItem=-1;
+  myRound=session.round|0;pst='playing';score=0;lives=CFG.LIVES;timeLeft=CFG.TIME;hits=0;errors=0;escaped=0;targets=[];shots=[];parts=[];floats=[];mistakes=[];flash=0;shake=0;applyItems();spawnT=.6;fireT=0;bag=[];lastItem=-1;
   ['sStart','sEnd','sPause','sLobby','sCount'].forEach(id=>$(id).classList.remove('on'));
   $('hud').style.display='flex';state='play';sfx('start');step=0;startMusic();
   $('board').style.display=online&&registered?'block':'none';$('bp').style.display=online&&registered?'none':'';push(true);
@@ -463,7 +503,7 @@ let skew=0,adminKey=new URLSearchParams(location.search).get('host')||'';
 const pid=(()=>{try{let v=localStorage.getItem('csid');if(!v){v=Math.random().toString(36).slice(2)+Date.now().toString(36);localStorage.setItem('csid',v)}return v}catch(e){return Math.random().toString(36).slice(2)+Date.now().toString(36)}})();
 const nowS=()=>Date.now()+skew;
 const api=(p,b)=>fetch(p,{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify(b)}).then(r=>r.json());
-function apply(d){skew=d.now-Date.now();players=d.players||{};session=d.session;gotS=true;if(!registered)seenRound=session.round|0;checkStart();renderSoon()}
+function apply(d){skew=d.now-Date.now();if(d.iv!==itemsVer){itemsVer=d.iv;loadItems()}players=d.players||{};session=d.session;gotS=true;if(!registered)seenRound=session.round|0;checkStart();renderSoon()}
 async function net(){
   try{
     me.id=pid;const r=await fetch('api/state');if(!r.ok)return;apply(await r.json());online=true;
@@ -508,6 +548,7 @@ const live=p=>p.status==='playing'&&nowS()-p.t<15000;
 let rT=0;function renderSoon(){if(rT)return;rT=setTimeout(()=>{rT=0;render()},250)}
 function render(){
   if(!online)return;
+  if(obsMode){renderObs();return}
   const now=nowS();
   if($('sLobby').classList.contains('on')){
     const L=$('lobList');L.replaceChildren();
@@ -534,16 +575,118 @@ function render(){
   }
 }
 
+/* ===== ENUNCIADOS DESDE EL SERVIDOR + EDITOR DEL ANFITRIÓN ===== */
+let itemsVer=-1,pendingItems=null,edItems=[];
+function parseItems(a){
+  if(!Array.isArray(a))return null;
+  const L=a.filter(x=>Array.isArray(x)&&typeof x[0]==='string'&&x[0].length>2).map(x=>[x[0],x[1]?1:0]);
+  return L.filter(x=>x[1]).length>=4&&L.filter(x=>!x[1]).length>=4?L:null;
+}
+async function loadItems(){try{const d=await (await fetch('api/items')).json();const L=parseItems(d.items);if(L){pendingItems=L;applyItems()}}catch(e){}}
+function applyItems(){if(pendingItems&&state!=='play'){ITEMS=pendingItems;pendingItems=null;bag=[]}}
+function edCount(){const r=edItems.filter(x=>x.b).length;$('edInfo').textContent=edItems.length+' enunciados: '+r+' riesgos y '+(edItems.length-r)+' buenas prácticas. Mejor si son breves (hasta unos 60 caracteres).'}
+function edRender(){
+  const L=$('edList');L.replaceChildren();
+  edItems.forEach((it,i)=>{
+    const r=el('div','erow'),inp=document.createElement('input');inp.value=it.t;inp.maxLength=120;inp.className=it.t.length>60?'long':'';
+    inp.oninput=()=>{it.t=inp.value;inp.className=inp.value.length>60?'long':''};
+    const sel=document.createElement('select');
+    [['1','Riesgo'],['0','Buena práctica']].forEach(([v,t])=>{const o=document.createElement('option');o.value=v;o.textContent=t;sel.append(o)});
+    sel.value=it.b?'1':'0';sel.onchange=()=>{it.b=sel.value==='1'?1:0;edCount()};
+    const del=el('button','','✕');del.title='Eliminar';del.onclick=()=>{edItems.splice(i,1);edRender()};
+    r.append(inp,sel,del);L.append(r);
+  });
+  edCount();
+}
+async function openEd(){
+  try{const d=await (await fetch('api/items')).json();edItems=(d.items||[]).map(([t,b])=>({t,b:b?1:0}))}catch(e){edItems=ITEMS.map(([t,b])=>({t,b}))}
+  ['sStart','sObs'].forEach(i=>$(i).classList.remove('on'));$('sEdit').classList.add('on');$('edMsg').textContent='';$('edBox').style.display='none';edRender();
+}
+function parseLines(t){
+  return t.split(/\r?\n/).map(l=>l.trim()).filter(Boolean).map(l=>{
+    const k=l.lastIndexOf('|');if(k<0)return null;
+    const txt=l.slice(0,k).trim(),tag=l.slice(k+1).trim().toLowerCase();
+    const b=/^(r|i|1)/.test(tag)?1:/^(b|g|c|0)/.test(tag)?0:-1;
+    return txt.length<3||b<0?null:{t:txt.slice(0,120),b};
+  });
+}
+$('edit').onclick=openEd;$('edit2').onclick=openEd;
+$('edBack').onclick=()=>{$('sEdit').classList.remove('on');(obsMode?$('sObs'):$('sStart')).classList.add('on')};
+$('edAdd').onclick=()=>{edItems.push({t:'',b:1});edRender();const I=$('edList').querySelectorAll('input');I[I.length-1].focus();$('edList').scrollTop=1e6};
+$('edPaste').onclick=()=>{const b=$('edBox');b.style.display=b.style.display==='none'?'block':'none'};
+$('edAddList').onclick=()=>{
+  const raw=$('edTa').value.split(/\r?\n/).filter(l=>l.trim()),P=parseLines($('edTa').value),ok=P.filter(Boolean);
+  edItems.push(...ok);$('edTa').value='';edRender();
+  $('edMsg').textContent=ok.length+' añadidos'+(raw.length>ok.length?'; '+(raw.length-ok.length)+' líneas ignoradas (formato: texto | riesgo  o  texto | buena).':'.');
+};
+$('edDl').onclick=()=>{
+  const t=edItems.map(x=>x.t+' | '+(x.b?'riesgo':'buena')).join('\n'),a=document.createElement('a');
+  a.href=URL.createObjectURL(new Blob([t],{type:'text/plain'}));a.download='enunciados.txt';a.click();
+};
+$('edReset').onclick=async()=>{
+  if(!confirm('¿Restaurar los enunciados originales? Se pierden los cambios.'))return;
+  try{await api('api/admin',{key:adminKey,action:'items_reset'});await openEd();$('edMsg').textContent='Enunciados originales restaurados.'}catch(e){$('edMsg').textContent='No se pudo restaurar.'}
+};
+$('edSave').onclick=async()=>{
+  const L=edItems.map(x=>({t:x.t.trim(),b:x.b})).filter(x=>x.t.length>=3),r=L.filter(x=>x.b).length;
+  if(r<4||L.length-r<4){$('edMsg').textContent='Necesitas al menos 4 riesgos y 4 buenas prácticas.';return}
+  $('edMsg').textContent='Guardando…';
+  try{
+    const a=await api('api/admin',{key:adminKey,action:'items_set',items:L.map(x=>[x.t,x.b])});
+    if(a.ok){edItems=L;edRender();$('edMsg').textContent='Guardado ('+L.length+'). Se aplica a las rondas que inicien desde ahora.';loadItems()}
+    else $('edMsg').textContent=a.error||'No se pudo guardar.';
+  }catch(e){$('edMsg').textContent='No se pudo guardar. Revisa tu conexión.'}
+};
+
+let obsMode=false;
+async function enterObs(){
+  await Promise.race([netReady,new Promise(r=>setTimeout(r,2500))]);
+  if(!online||!isHost){$('err').textContent='No se pudo validar la clave de anfitrión.';return}
+  obsMode=true;['sStart','sEnd','sPause','sLobby','sCount'].forEach(i=>$(i).classList.remove('on'));$('sObs').classList.add('on');render();
+}
+function renderObs(){
+  const now=nowS(),R=$('obRank');R.replaceChildren();
+  const r=ranks(),run=session.state==='running';
+  const ps=Object.values(players).filter(p=>now-p.t<30000);
+  const pend=r.filter(live).length,fin=session.round>0&&r.length>0&&(session.state==='closed'||pend===0);
+  if(!r.length){
+    $('obMsg').textContent=ps.length+' en la sala. '+(run?'Ronda iniciada: esperando que empiecen a jugar.':'Cuando estén todos, inicia la ronda.');
+    const L=el('div','list');ps.forEach(p=>L.append(rowEl(p.name,'en sala',false)));R.append(L);
+  }else{
+    $('obMsg').textContent=fin?'Resultado final de la ronda '+session.round+'. Ganador: '+r[0].name:'Ronda '+session.round+' en curso: '+pend+' jugando, '+(r.length-pend)+' terminaron.';
+    const pod=el('div','pod');
+    [1,0,2].forEach(i=>{const p=r[i];if(!p)return;const d=el('div','p'+(i+1));d.append(el('b','',(i+1)+'.º'),el('span','',p.name+' · '+p.score+' pts'));pod.append(d)});
+    const L=el('div','list');r.slice(0,15).forEach((p,i)=>L.append(rowEl((i+1)+'. '+p.name+(live(p)?' (jugando)':''),p.score,false)));
+    R.append(pod,L);
+  }
+  $('closeRound2').style.display=run&&!fin&&r.length?'inline-block':'none';
+}
+
 /* ===== ENTRADA ===== */
-cv.addEventListener('pointermove',e=>{ship.tx=e.clientX});
-cv.addEventListener('pointerdown',e=>{
-  if(e.pointerType==='mouse'&&e.button!==0)return;
-  ship.tx=e.clientX;if(e.pointerType!=='mouse')ship.x=ship.tx;
-  initAudio();fire();
+/* Mouse: la nave sigue el cursor y el clic dispara.
+   Táctil: arrastrar mueve la nave SIN disparar; un toque rápido dispara;
+   con dos dedos, uno mueve y el otro dispara. */
+const ptrs=new Map();
+cv.addEventListener('pointermove',e=>{
+  if(e.pointerType==='mouse'){ship.tx=e.clientX;return}
+  const q=ptrs.get(e.pointerId);if(!q||q.second)return;
+  ship.tx=e.clientX;if(Math.hypot(e.clientX-q.x,e.clientY-q.y)>12)q.moved=true;
 });
+cv.addEventListener('pointerdown',e=>{
+  initAudio();
+  if(e.pointerType==='mouse'){if(e.button!==0)return;ship.tx=e.clientX;fire();return}
+  const second=ptrs.size>0;
+  ptrs.set(e.pointerId,{x:e.clientX,y:e.clientY,t:performance.now(),moved:false,second});
+  if(second)fire();else{ship.tx=e.clientX;ship.x=ship.tx}
+});
+const lift=e=>{
+  const q=ptrs.get(e.pointerId);if(!q)return;ptrs.delete(e.pointerId);
+  if(e.type==='pointerup'&&!q.second&&!q.moved&&performance.now()-q.t<300)fire();
+};
+addEventListener('pointerup',lift);addEventListener('pointercancel',lift);
 cv.addEventListener('contextmenu',e=>e.preventDefault());
 addEventListener('keydown',e=>{
-  if(e.target&&e.target.tagName==='INPUT')return;
+  if(e.target&&/INPUT|TEXTAREA|SELECT/.test(e.target.tagName))return;
   if(e.code==='Space'){e.preventDefault();fire()}
   else if(e.code==='ArrowLeft')ship.tx-=60;else if(e.code==='ArrowRight')ship.tx+=60;
   else if(e.code==='KeyP')setPause(state==='play');
@@ -551,15 +694,17 @@ addEventListener('keydown',e=>{
 document.addEventListener('visibilitychange',()=>{if(document.hidden)setPause(true)});
 $('play').onclick=enter;$('again').onclick=()=>{if(online&&registered)toLobby();else startGame()};
 $('nm').addEventListener('keydown',e=>{if(e.key==='Enter')enter()});
+$('obs').onclick=enterObs;
+$('startRound2').onclick=()=>{api('api/admin',{key:adminKey,action:'start'}).catch(()=>{})};
+$('closeRound2').onclick=()=>{api('api/admin',{key:adminKey,action:'close'}).catch(()=>{})};
 $('startRound').onclick=()=>{api('api/admin',{key:adminKey,action:'start'}).catch(()=>{})};
 $('closeRound').onclick=()=>{api('api/admin',{key:adminKey,action:'close'}).catch(()=>{})};
-$('howb').onclick=()=>$('how').classList.toggle('on');
 $('bp').onclick=()=>setPause(true);$('resume').onclick=()=>setPause(false);
 $('bs').onclick=function(){initAudio();sfxOn=!sfxOn;this.classList.toggle('off',!sfxOn)};
 $('bm').onclick=function(){initAudio();musOn=!musOn;this.classList.toggle('off',!musOn);if(musGain)musGain.gain.value=musOn?.32:0};
 
 const netReady=net();
-netReady.then(()=>{$('netmsg').textContent=online?'Sala en línea conectada.':'Sin conexión a la sala en línea: jugarás en modo individual.'});
+netReady.then(()=>{$('netmsg').textContent=online?'Sala en línea conectada.':'Sin conexión a la sala en línea: jugarás en modo individual.';$('obs').style.display=online&&isHost?'inline-block':'none';$('edit').style.display=online&&isHost?'inline-block':'none'});
 resize();last=performance.now();requestAnimationFrame(loop);
 })();
 </script>
